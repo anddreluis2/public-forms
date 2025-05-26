@@ -10,6 +10,7 @@ import InstrumentsGrid from "./components/InstrumentsGrid";
 import SearchBar from "./components/SearchBar";
 import FilterTabs from "./components/FilterTabs";
 import Pagination from "./components/Pagination";
+import { IconOnly } from "./components/Logo";
 // InstrumentCard is used by InstrumentsGrid, so it doesn't need to be imported here directly if InstrumentsGrid handles it.
 
 // ApiInstrument interface is no longer needed if we only use mock data
@@ -214,7 +215,7 @@ export default function Home() {
       description:
         "O SDS é um instrumento de avaliação de interesses vocacionais que ajuda pessoas a identificar carreiras que combinam com seus interesses.",
       categories: [
-        { name: "Carreira", color: "#38A169", backgroundColor: "#E6FFFA" }, // Example colors
+        { name: "Carreira", color: "#38A169", backgroundColor: "#E6FFFA" },
         { name: "Avaliação", color: "#094871", backgroundColor: "#DFF1FF" },
       ],
       creationDate: "10/03/2025",
@@ -263,22 +264,39 @@ export default function Home() {
   // Handler for page change from Pagination component
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    // Optional: Scroll to top of instruments list on page change
-    // document.getElementById("instruments")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       <div className="relative overflow-hidden bg-gradient-to-b from-[#EDF1FF] to-[#F8FAFC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 text-center">
+          {/* New Logo and Brand Text Section */}
+          <div className="mb-12 flex justify-center items-center space-x-3 sm:space-x-4">
+            <IconOnly className="h-24 w-24 sm:h-24 sm:w-24" />{" "}
+            {/* Using IconOnly from Logo.tsx */}
+            <div className="text-left">
+              <p className="text-sm sm:text-base text-black leading-tight">
+                Biblioteca de
+              </p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-[#2C2C3F] leading-tight -mt-1">
+                instrumentos
+              </h1>
+              <p className="text-xs sm:text-sm text-black leading-tight">
+                by human<span className="font-bold">track</span>
+              </p>
+            </div>
+          </div>
+          {/* End New Logo and Brand Text Section */}
+
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="text-4xl md:text-5xl font-bold text-[#2C2C3F] mb-6 tracking-tight max-w-3xl mx-auto"
           >
-            Explore nossa biblioteca e encontre mais de 50 ferramentas clínicas
-            e terapêuticas
+            Explore nossa biblioteca e encontre mais de{" "}
+            <span className="text-[#675ef6] font-bold">50 ferramentas</span>{" "}
+            clínicas e terapêuticas
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: -20 }}
@@ -286,8 +304,8 @@ export default function Home() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-lg text-[#64748B] max-w-2xl mx-auto mb-10"
           >
-            São mais de 50 ferramentas clínicas. Navegue por categoria ou busque
-            por nome.
+            São mais de <span>50 ferramentas</span> clínicas. Navegue por
+            categoria ou busque por nome.
           </motion.p>
 
           <motion.div
