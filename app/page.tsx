@@ -269,7 +269,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       <div className="relative overflow-hidden bg-gradient-to-b from-[#EDF1FF] to-[#F8FAFC]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:py-4 lg:py-8 text-center">
           {/* New Logo and Brand Text Section */}
           <div className="mb-12 flex justify-center items-center space-x-3 sm:space-x-4">
             <IconOnly className="h-24 w-24 sm:h-24 sm:w-24" />{" "}
