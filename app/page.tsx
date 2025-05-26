@@ -1,7 +1,20 @@
-import Link from "next/link";
-import { Metadata } from "next";
+"use client";
 
-interface Instrument {
+import { motion } from "framer-motion";
+import { FigmaInstrument } from "./types"; // Assuming types.ts is in the same app directory for now, will adjust if components are moved deeper
+import { useState } from "react"; // useEffect removed
+
+// Import newly created components
+import InstrumentsLoading from "./components/InstrumentsLoading";
+import InstrumentsGrid from "./components/InstrumentsGrid";
+import SearchBar from "./components/SearchBar";
+import FilterTabs from "./components/FilterTabs";
+import Pagination from "./components/Pagination";
+// InstrumentCard is used by InstrumentsGrid, so it doesn't need to be imported here directly if InstrumentsGrid handles it.
+
+// ApiInstrument interface is no longer needed if we only use mock data
+/*
+interface ApiInstrument {
   id: string;
   title: string;
   acronym: string;
@@ -18,37 +31,41 @@ interface Instrument {
     scoring: string;
   };
 }
+*/
 
-export const metadata: Metadata = {
-  title: "Instrumentos Clínicos | Avaliações Psicológicas",
-  description:
-    "Explore nossa biblioteca de instrumentos clínicos para avaliação psicológica. Ferramentas validadas para diagnóstico e monitoramento terapêutico.",
-  keywords:
-    "instrumentos clínicos, avaliação psicológica, GAD-7, PHQ-9, ansiedade, depressão, burnout, TDAH, autismo",
-  openGraph: {
-    title: "Instrumentos Clínicos | Avaliações Psicológicas",
-    description:
-      "Explore nossa biblioteca de instrumentos clínicos para avaliação psicológica. Ferramentas validadas para diagnóstico e monitoramento terapêutico.",
-    type: "website",
-    locale: "pt_BR",
-    siteName: "Instrumentos Clínicos",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Instrumentos Clínicos | Avaliações Psicológicas",
-    description:
-      "Explore nossa biblioteca de instrumentos clínicos para avaliação psicológica.",
-  },
-  alternates: {
-    canonical: "https://seusite.com",
-  },
-};
+// export const metadata: Metadata = {
+//   // Note: static metadata in client components has limitations. Consider moving to layout.tsx if possible.
+//   title: "Biblioteca de Instrumentos | HumanTrack",
+//   description:
+//     "Explore nossa biblioteca e encontre mais de 50 ferramentas clínicas e terapêuticas. Navegue por categoria ou busque por nome.",
+//   keywords:
+//     "instrumentos clínicos, avaliação psicológica, GAD-7, PHQ-9, ansiedade, depressão, burnout, TDAH, autismo, psicométricos, escalas, questionários",
+//   openGraph: {
+//     title: "Biblioteca de Instrumentos | HumanTrack",
+//     description:
+//       "Explore nossa biblioteca e encontre mais de 50 ferramentas clínicas e terapêuticas.",
+//     type: "website",
+//     locale: "pt_BR",
+//     siteName: "HumanTrack Instrumentos",
+//   },
+//   twitter: {
+//     card: "summary_large_image",
+//     title: "Biblioteca de Instrumentos | HumanTrack",
+//     description:
+//       "Explore nossa vasta coleção de instrumentos clínicos validados.",
+//   },
+//   alternates: {
+//     canonical: "https://humantrack.com/instrumentos",
+//   },
+// };
 
-async function getInstruments(): Promise<Instrument[]> {
+// REMOVED: async function getInstruments()
+/*
+async function getInstruments(): Promise<ApiInstrument[]> { 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/instruments`,
     {
-      next: { revalidate: 3600 }, // Revalidate every hour
+      next: { revalidate: 3600 },
     }
   );
 
@@ -58,180 +75,305 @@ async function getInstruments(): Promise<Instrument[]> {
 
   return res.json();
 }
+*/
 
-export default async function Home() {
-  const instruments = await getInstruments();
+// Updated InstrumentCard to match Figma design
+
+// MockInstrumentCard is removed as per the direction to use FigmaInstrument structure for all cards.
+/*
+function MockInstrumentCard({
+// ... 
+}) {
+  // ...
+}
+*/
+
+// MODIFIED: Home component is no longer async and uses only mock data
+const ITEMS_PER_PAGE = 6; // Define items per page
+
+export default function Home() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Todas");
+  const [currentPage, setCurrentPage] = useState(1); // Add currentPage state
+
+  const mockFigmaInstruments: FigmaInstrument[] = [
+    {
+      id: "mock-tag",
+      title: "Entrevista para Transtorno de Ansiedade Generalizada (TAG)",
+      description:
+        "A Entrevista para Transtorno de Ansiedade Generalizada é um instrumento de avaliação projetado para identificar sintomas relacionados ao TAG, pois oferece suporte e direcionamento em processos de acolhimento e direcionamento para avaliação diagnóstica formal.",
+      categories: [
+        { name: "Ansiedade", color: "#712B2B", backgroundColor: "#FAE6E6" }, // Colors from Figma
+        {
+          name: "Avaliação do Clínico",
+          color: "#094871",
+          backgroundColor: "#DFF1FF",
+        },
+      ],
+      creationDate: "16/10/2024",
+      href: "/forms/tag-example",
+    },
+    {
+      id: "mock-asrs",
+      title: "Adult ADHD Self-Report Scale (ASRS-18)",
+      description:
+        "A Adult Self-Report Scale (ASRS-18) é um questionário de auto-relato desenvolvido para triagem de sintomas de Transtorno do Déficit de Atenção/Hiperatividade (TDAH) em adultos.",
+      categories: [
+        { name: "TDAH", color: "#3F2D85", backgroundColor: "#E6E6FA" }, // Colors from Figma
+        { name: "Diagnóstico", color: "#094871", backgroundColor: "#DFF1FF" },
+      ],
+      creationDate: "10/11/2024",
+      href: "/forms/asrs-example",
+    },
+    {
+      id: "mock-audit",
+      title: "Alcohol Use Disorder Identification Test (AUDIT)",
+      description:
+        "O AUDIT (Alcohol Use Disorder Identification Test) é um instrumento de rastreio desenvolvido pela Organização Mundial da Saúde (OMS) para identificar padrões de consumo de álcool potencialmente prejudiciais.",
+      categories: [
+        { name: "Dependência", color: "#52315E", backgroundColor: "#F5EEF9" }, // Colors from Figma
+        { name: "Mensuração", color: "#274553", backgroundColor: "#D3E4ED" },
+      ],
+      creationDate: "22/12/2024",
+      href: "/forms/audit-example",
+    },
+    {
+      id: "mock-mbi", // Using one of the original mocks as a template
+      title: "Maslach Burnout Inventory (MBI)",
+      description:
+        "Instrumento padrão-ouro para avaliação da síndrome de burnout em profissionais.",
+      categories: [
+        { name: "Burnout", color: "#1E293B", backgroundColor: "#EDEDED" },
+        { name: "Bem-estar", color: "#234424", backgroundColor: "#E5F4E4" },
+      ],
+      creationDate: "24/02/2025",
+      href: "/forms/mbi-example",
+    },
+    // Add more mock instruments as needed to fill the grid, based on Figma if possible
+    {
+      id: "mock-aq10",
+      title: "Autism Spectrum Quotient - Adult (AQ-10)",
+      description:
+        "A Escala AQ-10 é uma versão reduzida do Autism Spectrum Quotient, desenvolvida para rastrear traços de autismo mais rapidamente.",
+      categories: [
+        { name: "Autismo", color: "#3F2D85", backgroundColor: "#E6E6FA" },
+        // Assuming a generic "Avaliação" badge if not specified
+        { name: "Avaliação", color: "#094871", backgroundColor: "#DFF1FF" },
+      ],
+      creationDate: "01/09/2024",
+      href: "/forms/aq10-example",
+    },
+    {
+      id: "mock-core-om",
+      title: "Clinical Outcomes in Routine Evaluation (CORE-OM)",
+      description:
+        "O CORE-OM é um instrumento de autorrelato para monitorar progresso e avaliar a eficácia de tratamentos em saúde mental.",
+      categories: [
+        {
+          name: "Baseado em Feedback",
+          color: "#274553",
+          backgroundColor: "#D3E4ED",
+        },
+        {
+          name: "Monitoramento de Progresso",
+          color: "#274553",
+          backgroundColor: "#D3E4ED",
+        },
+      ],
+      creationDate: "01/09/2024",
+      href: "/forms/core-om-example",
+    },
+    // Add a few more for pagination testing
+    {
+      id: "mock-phq9",
+      title: "Patient Health Questionnaire (PHQ-9)",
+      description:
+        "O PHQ-9 é um questionário de nove itens para rastrear, diagnosticar e monitorar a gravidade da depressão.",
+      categories: [
+        { name: "Depressão", color: "#5A67D8", backgroundColor: "#EBF4FF" }, // Example colors
+        { name: "Diagnóstico", color: "#094871", backgroundColor: "#DFF1FF" },
+      ],
+      creationDate: "15/01/2025",
+      href: "/forms/phq9-example",
+    },
+    {
+      id: "mock-gad7",
+      title: "Generalized Anxiety Disorder (GAD-7)",
+      description:
+        "O GAD-7 é uma ferramenta de sete itens para rastrear e medir a gravidade do transtorno de ansiedade generalizada.",
+      categories: [
+        { name: "Ansiedade", color: "#712B2B", backgroundColor: "#FAE6E6" },
+        { name: "Mensuração", color: "#274553", backgroundColor: "#D3E4ED" },
+      ],
+      creationDate: "20/02/2025",
+      href: "/forms/gad7-example",
+    },
+    {
+      id: "mock-sds",
+      title: "Self-Directed Search (SDS)",
+      description:
+        "O SDS é um instrumento de avaliação de interesses vocacionais que ajuda pessoas a identificar carreiras que combinam com seus interesses.",
+      categories: [
+        { name: "Carreira", color: "#38A169", backgroundColor: "#E6FFFA" }, // Example colors
+        { name: "Avaliação", color: "#094871", backgroundColor: "#DFF1FF" },
+      ],
+      creationDate: "10/03/2025",
+      href: "/forms/sds-example",
+    },
+  ];
+
+  // Derive unique categories for FilterTabs
+  const allCategories = mockFigmaInstruments.flatMap((instrument) =>
+    instrument.categories.map((cat) => cat.name)
+  );
+  const uniqueCategories = [...new Set(allCategories)];
+
+  // Reset to page 1 when filters change
+  // This will be improved with useEffect later if needed for more complex scenarios
+  const handleFilterChange = (category: string) => {
+    setSelectedCategory(category);
+    setCurrentPage(1);
+  };
+  const handleSearchChange = (term: string) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+  };
+
+  const filteredInstruments = mockFigmaInstruments.filter((instrument) => {
+    const matchesCategory =
+      selectedCategory === "Todas" ||
+      instrument.categories.some((cat) => cat.name === selectedCategory);
+    const matchesSearchTerm =
+      instrument.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      instrument.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      instrument.categories.some((cat) =>
+        cat.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    return matchesCategory && matchesSearchTerm;
+  });
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredInstruments.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedInstruments = filteredInstruments.slice(startIndex, endIndex);
+
+  const displayInstruments = paginatedInstruments;
+
+  // Handler for page change from Pagination component
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Optional: Scroll to top of instruments list on page change
+    // document.getElementById("instruments")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F8F9FF] via-[#F0E7FF] to-[#ECF9F7]">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6]/10 via-[#6366F1]/5 to-transparent" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-          <div className="text-center max-w-4xl mx-auto">
-            <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-[#F3F4FF] text-[#6366F1] mb-8">
-              Monitoramento em tempo real
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#1A1B1E] mb-6 tracking-tight">
-              A próxima geração em monitoramento de saúde comportamental
-            </h1>
-            <p className="text-lg md:text-xl text-[#4A5568] max-w-3xl mx-auto leading-relaxed mb-12">
-              Acompanhe seus pacientes utilizando dados e Inteligência
-              Artificial.
-            </p>
-            <div className="flex items-center justify-center space-x-4">
-              <a
-                href="#instruments"
-                className="inline-flex items-center px-6 py-3 rounded-full text-white bg-gradient-to-r from-[#8B5CF6] to-[#6366F1] hover:from-[#7C3AED] hover:to-[#4F46E5] transition-all duration-200 font-medium shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30"
-              >
-                Comece a monitorar grátis →
-              </a>
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#F8FAFC]">
+      <div className="relative overflow-hidden bg-gradient-to-b from-[#EDF1FF] to-[#F8FAFC]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl md:text-5xl font-bold text-[#2C2C3F] mb-6 tracking-tight max-w-3xl mx-auto"
+          >
+            Explore nossa biblioteca e encontre mais de 50 ferramentas clínicas
+            e terapêuticas
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="text-lg text-[#64748B] max-w-2xl mx-auto mb-10"
+          >
+            São mais de 50 ferramentas clínicas. Navegue por categoria ou busque
+            por nome.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
+            <SearchBar
+              searchTerm={searchTerm}
+              onSearchChange={handleSearchChange}
+            />
+          </motion.div>
         </div>
       </div>
 
-      {/* Instruments Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <FilterTabs
+          categories={uniqueCategories}
+          selectedCategory={selectedCategory}
+          onSelectCategory={handleFilterChange}
+        />
+      </div>
+
       <div
         id="instruments"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
       >
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-[#1A1B1E] mb-4">
-            Biblioteca de Instrumentos Clínicos
-          </h2>
-          <p className="text-lg text-[#4A5568] max-w-2xl mx-auto">
-            Explore nossa coleção de instrumentos validados para avaliação
-            psicológica. Ferramentas confiáveis para diagnóstico e
-            acompanhamento terapêutico.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {instruments.map((instrument) => (
-            <Link
-              key={instrument.id}
-              href={`/forms/${instrument.id}`}
-              className="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-8 border border-[#E2E8F0] hover:border-[#6B46C1]/20"
-            >
-              <div className="flex items-center justify-between mb-6">
-                <span className="px-4 py-2 text-sm font-medium text-[#805AD5] bg-[#FAF5FF] rounded-full group-hover:bg-[#F3E8FF] transition-colors duration-300">
-                  {instrument.category}
-                </span>
-                <span className="text-sm font-semibold text-[#38A169] bg-[#F0FFF4] px-3 py-1 rounded-full">
-                  {instrument.acronym}
-                </span>
-              </div>
-              <h2 className="text-2xl font-semibold text-[#2D3748] mb-4 group-hover:text-[#6B46C1] transition-colors duration-300">
-                {instrument.title}
-              </h2>
-              <p className="text-[#4A5568] mb-6 line-clamp-2">
-                {instrument.description}
-              </p>
-              <div className="flex items-center text-sm text-[#718096]">
-                <span className="mr-2">Desenvolvido por:</span>
-                <span className="font-medium text-[#2D3748]">
-                  {instrument.metadata.author}
-                </span>
-              </div>
-            </Link>
-          ))}
-
-          {/* Mock Additional Instruments */}
-          <Link
-            href="/forms/3"
-            className="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-8 border border-[#E2E8F0] hover:border-[#6B46C1]/20"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <span className="px-4 py-2 text-sm font-medium text-[#805AD5] bg-[#FAF5FF] rounded-full group-hover:bg-[#F3E8FF] transition-colors duration-300">
-                TDAH
-              </span>
-              <span className="text-sm font-semibold text-[#38A169] bg-[#F0FFF4] px-3 py-1 rounded-full">
-                ASRS
-              </span>
-            </div>
-            <h2 className="text-2xl font-semibold text-[#2D3748] mb-4 group-hover:text-[#6B46C1] transition-colors duration-300">
-              Adult ADHD Self-Report Scale
-            </h2>
-            <p className="text-[#4A5568] mb-6 line-clamp-2">
-              Escala de autoavaliação para sintomas de TDAH em adultos,
-              desenvolvida em colaboração com a OMS.
+        {filteredInstruments.length === 0 &&
+        (searchTerm !== "" || selectedCategory !== "Todas") ? (
+          <div className="text-center py-12">
+            <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+              Nenhum instrumento encontrado
+            </h3>
+            <p className="text-gray-500">Tente ajustar sua busca ou filtros.</p>
+          </div>
+        ) : paginatedInstruments.length === 0 &&
+          !(searchTerm === "" && selectedCategory === "Todas") ? (
+          <div className="text-center py-12">
+            <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+              Nenhum instrumento encontrado
+            </h3>
+            <p className="text-gray-500">
+              Não há mais itens para exibir com os filtros atuais.
             </p>
-            <div className="flex items-center text-sm text-[#718096]">
-              <span className="mr-2">Desenvolvido por:</span>
-              <span className="font-medium text-[#2D3748]">
-                Kessler, R. C., et al.
-              </span>
-            </div>
-          </Link>
-
-          <Link
-            href="/forms/4"
-            className="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-8 border border-[#E2E8F0] hover:border-[#6B46C1]/20"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <span className="px-4 py-2 text-sm font-medium text-[#805AD5] bg-[#FAF5FF] rounded-full group-hover:bg-[#F3E8FF] transition-colors duration-300">
-                Burnout
-              </span>
-              <span className="text-sm font-semibold text-[#38A169] bg-[#F0FFF4] px-3 py-1 rounded-full">
-                MBI
-              </span>
-            </div>
-            <h2 className="text-2xl font-semibold text-[#2D3748] mb-4 group-hover:text-[#6B46C1] transition-colors duration-300">
-              Maslach Burnout Inventory
-            </h2>
-            <p className="text-[#4A5568] mb-6 line-clamp-2">
-              Instrumento padrão-ouro para avaliação da síndrome de burnout em
-              profissionais.
-            </p>
-            <div className="flex items-center text-sm text-[#718096]">
-              <span className="mr-2">Desenvolvido por:</span>
-              <span className="font-medium text-[#2D3748]">
-                Maslach, C., & Jackson, S. E.
-              </span>
-            </div>
-          </Link>
-
-          <Link
-            href="/forms/5"
-            className="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 p-8 border border-[#E2E8F0] hover:border-[#6B46C1]/20"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <span className="px-4 py-2 text-sm font-medium text-[#805AD5] bg-[#FAF5FF] rounded-full group-hover:bg-[#F3E8FF] transition-colors duration-300">
-                Autismo
-              </span>
-              <span className="text-sm font-semibold text-[#38A169] bg-[#F0FFF4] px-3 py-1 rounded-full">
-                M-CHAT
-              </span>
-            </div>
-            <h2 className="text-2xl font-semibold text-[#2D3748] mb-4 group-hover:text-[#6B46C1] transition-colors duration-300">
-              Modified Checklist for Autism in Toddlers
-            </h2>
-            <p className="text-[#4A5568] mb-6 line-clamp-2">
-              Instrumento de triagem para transtorno do espectro autista em
-              crianças pequenas.
-            </p>
-            <div className="flex items-center text-sm text-[#718096]">
-              <span className="mr-2">Desenvolvido por:</span>
-              <span className="font-medium text-[#2D3748]">
-                Robins, D. L., et al.
-              </span>
-            </div>
-          </Link>
-        </div>
+          </div>
+        ) : paginatedInstruments.length === 0 &&
+          searchTerm === "" &&
+          selectedCategory === "Todas" &&
+          mockFigmaInstruments.length > 0 ? (
+          // This case should ideally not be hit if mockFigmaInstruments has items initially,
+          // as paginatedInstruments would have items unless ITEMS_PER_PAGE is 0 or less.
+          // Kept for robustness or if mockFigmaInstruments could be empty initially.
+          <InstrumentsLoading />
+        ) : paginatedInstruments.length > 0 ? (
+          <InstrumentsGrid instruments={displayInstruments} />
+        ) : (
+          // Default to loading if mockFigmaInstruments is truly empty from the start
+          <InstrumentsLoading />
+        )}
       </div>
 
-      {/* Footer */}
-      <div className="bg-white border-t border-[#E2E8F0]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <p className="text-[#4A5568]">
-              © 2024{" "}
-              <span className="font-semibold text-[#6366F1]">HumanTrack</span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+        className="bg-[#2C2C3F] border-t border-[#CBCBCB]"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
+            <p className="text-sm text-white mb-2 sm:mb-0">
+              © 2025 Humantrack. Todos os direitos reservados
+            </p>
+            <p className="text-sm text-white">
+              💜 Feito com amor por HumanTrack
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
