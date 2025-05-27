@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FigmaInstrument } from "../types"; // Adjusted import path
+import { Instrument } from "../types";
 
 interface InstrumentCardProps {
-  instrument: FigmaInstrument;
+  instrument: Instrument;
 }
 
 export default function InstrumentCard({ instrument }: InstrumentCardProps) {
@@ -31,11 +31,7 @@ export default function InstrumentCard({ instrument }: InstrumentCardProps) {
           {instrument.categories.map((category, index) => (
             <span
               key={index}
-              className="px-3 py-1 text-xs font-bold rounded-full"
-              style={{
-                color: category.color,
-                backgroundColor: category.backgroundColor,
-              }}
+              className="px-3 bg-[#7375FC] text-white py-1 text-xs font-bold rounded-full"
             >
               {category.name}
             </span>

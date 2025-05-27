@@ -1,10 +1,10 @@
 "use client";
 
-import { FigmaInstrument } from "../types";
+import { Instrument } from "../types";
 import InstrumentCard from "./InstrumentCard";
 
 interface InstrumentsGridProps {
-  instruments: FigmaInstrument[];
+  instruments: Instrument[];
 }
 
 export default function InstrumentsGrid({ instruments }: InstrumentsGridProps) {
