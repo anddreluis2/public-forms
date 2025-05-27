@@ -1,4 +1,7 @@
+"use server";
+
 import { Suspense } from "react";
+
 import { Instrument } from "./types";
 import InstrumentsPageClient from "./components/InstrumentsPageClient";
 import InstrumentsLoading from "./components/InstrumentsLoading"; // For Suspense fallback
