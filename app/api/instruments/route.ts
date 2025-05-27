@@ -2,15 +2,9 @@ import { NextResponse } from "next/server";
 // Import the single Instrument type
 import { Instrument } from "../../types";
 
-// CATEGORY_STYLES map is REMOVED from this file.
-// Colors will be applied by the client-side rendering component.
-
 interface RawApiCategoryOrTag {
   name: string;
-  // If your API might send other known properties for categories/tags,
-  // you can add them here as optional, e.g., id?: string, description?: string.
-  // For now, we only strictly need 'name' for the transformation.
-  [key: string]: unknown; // Allows other properties but encourages known ones to be defined
+  [key: string]: unknown;
 }
 
 // Define an internal interface for the raw data structure from the external API
@@ -32,15 +26,7 @@ interface RawApiInstrument {
 }
 
 export async function GET() {
-  const externalApiUrl = process.env.EXTERNAL_API_URL;
-
-  if (!externalApiUrl) {
-    console.error("EXTERNAL_API_URL is not set in environment variables.");
-    return NextResponse.json(
-      { error: "Server configuration error: Missing external API URL." },
-      { status: 500 }
-    );
-  }
+  const externalApiUrl = process.env.EXTERNAL_API_URL!;
 
   const res = await fetch(externalApiUrl, {
     headers: { "Content-Type": "application/json" },
@@ -53,14 +39,9 @@ export async function GET() {
       `Error fetching from external API: ${res.status} ${res.statusText}`,
       errorText
     );
-    return NextResponse.json(
-      {
-        error: `Failed to fetch instruments from external source. Status: ${res.status}. Response: ${errorText}`,
-      },
-      { status: res.status }
-    );
   }
 
+  // Assuming res.json() always succeeds and returns data matching RawApiInstrument[]
   const rawDataArray: RawApiInstrument[] = await res.json();
 
   // Transform rawData to Instrument[] here

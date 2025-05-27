@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Instrument } from "../types";
 import InstrumentsGrid from "./InstrumentsGrid";
@@ -13,39 +13,17 @@ const ITEMS_PER_PAGE = 6;
 
 interface InstrumentsPageClientProps {
   initialInstruments: Instrument[];
-  error?: string | null; // To pass potential server-side fetch errors
 }
 
 export default function InstrumentsPageClient({
   initialInstruments,
-  error: initialError,
 }: InstrumentsPageClientProps) {
-  // Initialize instruments state with server-fetched data or an empty array if error
-  const [instruments, setInstruments] = useState<Instrument[]>(
-    initialError ? [] : initialInstruments
-  );
-  // isLoading state is removed as initial load is handled by server component / Suspense
-  // error state for client-side errors or to display server-side error
-  const [error, setError] = useState<string | null>(initialError || null);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todas");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // If initialInstruments change (e.g. parent re-fetches), update state.
-  // This might be useful if the parent Server Component has revalidation.
-  useEffect(() => {
-    if (!initialError) {
-      setInstruments(initialInstruments);
-      setError(null); // Clear previous errors if new initial data is good
-    } else {
-      setInstruments([]); // Clear instruments if there was an error fetching initial data
-      setError(initialError);
-    }
-  }, [initialInstruments, initialError]);
-
-  // Derive unique categories for FilterTabs from instruments state
-  const allCategories = instruments.flatMap((instrument) =>
+  // Derive unique categories for FilterTabs from initialInstruments prop
+  const allCategories = initialInstruments.flatMap((instrument) =>
     instrument.categories.map((cat) => cat.name)
   );
   const uniqueCategories = [...new Set(allCategories)];
@@ -59,7 +37,8 @@ export default function InstrumentsPageClient({
     setCurrentPage(1);
   };
 
-  const filteredInstruments = instruments.filter((instrument) => {
+  // Filter initialInstruments directly
+  const filteredInstruments = initialInstruments.filter((instrument) => {
     const matchesCategory =
       selectedCategory === "Todas" ||
       instrument.categories.some((cat) => cat.name === selectedCategory);
@@ -82,21 +61,6 @@ export default function InstrumentsPageClient({
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
-  if (error && !initialInstruments.length) {
-    // Only show full page error if no initial instruments were loaded
-    return (
-      <div className="text-center py-20 min-h-screen bg-[#F8FAFC]">
-        <h3 className="text-2xl font-semibold text-red-600 mb-2">
-          Erro ao carregar instrumentos
-        </h3>
-        <p className="text-gray-500">{error}</p>
-        <p className="text-gray-500 mt-4">
-          Ocorreu um problema ao buscar os dados iniciais no servidor.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
@@ -162,40 +126,35 @@ export default function InstrumentsPageClient({
         id="instruments"
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
       >
-        {/* Updated conditional rendering logic */}
-        {
-          filteredInstruments.length === 0 &&
+        {paginatedInstruments.length > 0 ? (
+          <InstrumentsGrid instruments={displayInstruments} />
+        ) : filteredInstruments.length === 0 &&
           (searchTerm !== "" || selectedCategory !== "Todas") ? (
-            <div className="text-center py-12">
-              <h3 className="text-2xl font-semibold text-gray-700 mb-2">
-                Nenhum instrumento encontrado
-              </h3>
-              <p className="text-gray-500">
-                Tente ajustar sua busca ou filtros.
-              </p>
-            </div>
-          ) : paginatedInstruments.length === 0 && instruments.length > 0 ? (
-            <div className="text-center py-12">
-              <h3 className="text-2xl font-semibold text-gray-700 mb-2">
-                Nenhum instrumento para exibir nesta página.
-              </h3>
-              <p className="text-gray-500">
-                Tente ir para outra página ou ajustar os filtros.
-              </p>
-            </div>
-          ) : paginatedInstruments.length > 0 ? (
-            <InstrumentsGrid instruments={displayInstruments} />
-          ) : instruments.length === 0 && !error ? (
-            <div className="text-center py-12">
-              <h3 className="text-2xl font-semibold text-gray-700 mb-2">
-                Nenhum instrumento disponível no momento.
-              </h3>
-              <p className="text-gray-500">
-                Verifique mais tarde ou contate o suporte.
-              </p>
-            </div>
-          ) : null // Removed isLoading condition, error is handled above, or covered by other conditions
-        }
+          <div className="text-center py-12">
+            <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+              Nenhum instrumento encontrado
+            </h3>
+            <p className="text-gray-500">Tente ajustar sua busca ou filtros.</p>
+          </div>
+        ) : initialInstruments.length === 0 ? (
+          // This case now means no instruments were loaded initially from the prop
+          <div className="text-center py-12">
+            <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+              Nenhum instrumento disponível no momento.
+            </h3>
+            <p className="text-gray-500">Verifique mais tarde.</p>
+          </div>
+        ) : (
+          // Fallback for paginatedInstruments.length === 0 but initialInstruments.length > 0 (e.g. page beyond total pages after filtering)
+          <div className="text-center py-12">
+            <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+              Nenhum instrumento para exibir nesta página.
+            </h3>
+            <p className="text-gray-500">
+              Tente ir para outra página ou ajustar os filtros.
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

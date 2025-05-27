@@ -17,10 +17,10 @@ async function getInstruments(): Promise<{
   if (!response.ok) {
     const errorText = await response.text();
     console.error(
-      `Failed to fetch instruments from /api/instruments. Status: ${response.status}`,
+      `Error response from /api/instruments. Status: ${response.status}`,
       errorText
     );
-    const errorMessage = `Failed to load instruments: ${response.status} - ${
+    const errorMessage = `API route failed: ${response.status} - ${
       response.statusText
     }.${errorText ? " Details: " + errorText : ""}`;
     return {
@@ -29,21 +29,17 @@ async function getInstruments(): Promise<{
     };
   }
 
-  // If response.json() fails, the error will propagate to Next.js Server Component error handling.
   const data: Instrument[] = await response.json();
   return { initialInstruments: data, error: null };
 }
 
 // Page component is now an async Server Component
 export default async function HomePage() {
-  const { initialInstruments, error } = await getInstruments();
+  const { initialInstruments } = await getInstruments();
 
   return (
     <Suspense fallback={<InstrumentsLoading />}>
-      <InstrumentsPageClient
-        initialInstruments={initialInstruments}
-        error={error}
-      />
+      <InstrumentsPageClient initialInstruments={initialInstruments} />
     </Suspense>
   );
 }
