@@ -9,6 +9,15 @@ interface InstrumentCardProps {
 }
 
 export default function InstrumentCard({ instrument }: InstrumentCardProps) {
+  const formattedCreationDate = new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(new Date(instrument.creationDate));
+
   return (
     <motion.div
       whileHover={{
@@ -40,13 +49,14 @@ export default function InstrumentCard({ instrument }: InstrumentCardProps) {
         <h2 className="text-xl font-bold text-[#2C2C3F] mb-3 leading-tight">
           {instrument.title}
         </h2>
-        <p className="text-sm text-[#64748B] mb-4 line-clamp-3">
-          {instrument.description}
-        </p>
+        <p
+          className="text-sm text-[#64748B] mb-4 line-clamp-3"
+          dangerouslySetInnerHTML={{ __html: instrument.description }}
+        />
       </div>
       <div>
         <div className="text-xs text-[#94A3B8] mb-4">
-          Criado em: {instrument.creationDate}
+          Criado em: {formattedCreationDate}
         </div>
         <Link
           href={instrument.href}
