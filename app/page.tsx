@@ -11,7 +11,7 @@ async function getInstruments(): Promise<{
   error?: string | null;
 }> {
   console.log(process.env.NEXT_PUBLIC_APP_URL);
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const baseUrl = "https://instrumentos-psicologicos.vercel.app";
   const internalApiUrl = `${baseUrl}/api/instruments`;
 
   const response = await fetch(internalApiUrl, {
