@@ -7,12 +7,13 @@ async function getInstruments(): Promise<{
   initialInstruments: Instrument[];
   error?: string | null;
 }> {
+  console.log(process.env.NEXT_PUBLIC_APP_URL);
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   const internalApiUrl = `${baseUrl}/api/instruments`;
 
   const response = await fetch(internalApiUrl, {
     next: { revalidate: 3600 },
-    cache: "default",
+    cache: "no-store",
   });
 
   if (!response.ok) {

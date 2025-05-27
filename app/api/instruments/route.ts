@@ -24,6 +24,7 @@ interface RawApiInstrument {
 }
 
 export async function GET() {
+  console.log(process.env.EXTERNAL_API_URL);
   const externalApiUrl = process.env.EXTERNAL_API_URL;
 
   if (!externalApiUrl) {
