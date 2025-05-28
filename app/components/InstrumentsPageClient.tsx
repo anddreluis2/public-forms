@@ -9,7 +9,7 @@ import FilterTabs from "./FilterTabs";
 import Pagination from "./Pagination";
 import { IconOnly } from "./Logo";
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 9;
 
 interface InstrumentsPageClientProps {
   initialInstruments: Instrument[];
