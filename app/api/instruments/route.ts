@@ -25,7 +25,5 @@ export async function getInstruments(): Promise<{
 
   const data: Instrument[] = await response.json();
 
-  console.log("------------", JSON.stringify(data, null, 2));
-
   return { initialInstruments: data, error: null };
 }
