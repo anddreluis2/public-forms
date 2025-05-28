@@ -70,7 +70,7 @@ export default function InstrumentHero({ instrument }: InstrumentHeroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.5 }}
         >
-          {instrument.categories?.map((category, index) => (
+          {instrument.tags?.map((tag, index) => (
             <motion.span
               key={index}
               className="px-2 md:px-3 py-1 rounded-full text-xs font-extrabold tracking-wide cursor-default"
@@ -84,7 +84,7 @@ export default function InstrumentHero({ instrument }: InstrumentHeroProps) {
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
-              {category.name}
+              {tag.name}
             </motion.span>
           ))}
         </motion.div>

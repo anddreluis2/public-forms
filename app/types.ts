@@ -4,6 +4,7 @@ export interface Instrument {
   title: string;
   description: string;
   categories: { name: string }[];
+  tags?: { id: number; name: string; createdAt: string; updatedAt: string }[];
   creationDate: string;
   author?: string;
   href: string;

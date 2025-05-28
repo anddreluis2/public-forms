@@ -29,7 +29,7 @@ export default function InstrumentsPageClient({
   }, []);
 
   const allCategories = initialInstruments.flatMap(
-    (instrument) => instrument.categories?.map((cat) => cat.name) || []
+    (instrument) => instrument.tags?.map((tag) => tag.name) || []
   );
   const uniqueCategories = [...new Set(allCategories)];
 
@@ -46,12 +46,12 @@ export default function InstrumentsPageClient({
   const filteredInstruments = initialInstruments.filter((instrument) => {
     const matchesCategory =
       selectedCategory === "Todas" ||
-      instrument.categories.some((cat) => cat.name === selectedCategory);
+      instrument.tags?.some((tag) => tag.name === selectedCategory);
     const matchesSearchTerm =
       instrument.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       instrument.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      instrument.categories.some((cat) =>
-        cat.name.toLowerCase().includes(searchTerm.toLowerCase())
+      instrument.tags?.some((tag) =>
+        tag.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     return matchesCategory && matchesSearchTerm;
   });
