@@ -3,20 +3,14 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Instrument } from "../types";
+import { formatDateToBrazilian } from "../utils/dateUtils";
 
 interface InstrumentCardProps {
   instrument: Instrument;
 }
 
 export default function InstrumentCard({ instrument }: InstrumentCardProps) {
-  const formattedCreationDate = new Intl.DateTimeFormat("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(new Date(instrument.creationDate));
+  const formattedCreationDate = formatDateToBrazilian(instrument.creationDate);
 
   return (
     <motion.div
