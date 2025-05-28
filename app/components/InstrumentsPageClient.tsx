@@ -7,7 +7,7 @@ import InstrumentsGrid from "./InstrumentsGrid";
 import SearchBar from "./SearchBar";
 import FilterTabs from "./FilterTabs";
 import Pagination from "./Pagination";
-import { IconOnly } from "./Logo";
+import LogoWithText from "./LogoWithText";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -74,19 +74,8 @@ export default function InstrumentsPageClient({
         <div className="relative overflow-hidden bg-gradient-to-b from-[#EDF1FF] to-[#F8FAFC]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 text-center">
             {/* Logo and Brand - Static */}
-            <div className="mb-8 sm:mb-10 lg:mb-12 flex justify-center items-center space-x-3 sm:space-x-4">
-              <IconOnly className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24" />
-              <div className="text-left">
-                <p className="text-xs sm:text-sm lg:text-base text-black leading-tight">
-                  Biblioteca de
-                </p>
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#2C2C3F] leading-tight -mt-1">
-                  instrumentos
-                </h1>
-                <p className="text-xs sm:text-sm text-black leading-tight">
-                  by human<span className="font-bold">track</span>
-                </p>
-              </div>
+            <div className="mb-8 sm:mb-10 lg:mb-12">
+              <LogoWithText logoSize="md" animated={false} />
             </div>
 
             {/* Static content without animations */}
@@ -95,11 +84,6 @@ export default function InstrumentsPageClient({
               <span className="text-[#675ef6] font-bold">50 ferramentas</span>{" "}
               clínicas e terapêuticas
             </h1>
-
-            <p className="text-sm sm:text-base lg:text-lg text-[#64748B] max-w-2xl mx-auto mb-6 sm:mb-8 lg:mb-10 px-4">
-              São mais de <span className="font-semibold">50 ferramentas</span>{" "}
-              clínicas. Navegue por categoria ou busque por nome.
-            </p>
 
             {/* Loading placeholder for search */}
             <div className="px-4">
@@ -124,34 +108,12 @@ export default function InstrumentsPageClient({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 text-center">
           {/* Logo and Brand - Responsive with Hover */}
           <motion.div
-            className="mb-8 sm:mb-10 lg:mb-12 flex justify-center items-center space-x-3 sm:space-x-4
-                       cursor-pointer group transition-all duration-300 ease-in-out"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="mb-8 sm:mb-10 lg:mb-12"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
           >
-            <div className="group-hover:rotate-12 transition-transform duration-300">
-              <IconOnly className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24" />
-            </div>
-            <div className="text-left">
-              <p
-                className="text-xs sm:text-sm lg:text-base text-black leading-tight
-                           group-hover:text-[#7375FC] transition-colors duration-300"
-              >
-                Biblioteca de
-              </p>
-              <h1
-                className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#2C2C3F] leading-tight -mt-1
-                           group-hover:text-[#7375FC] transition-colors duration-300"
-              >
-                instrumentos
-              </h1>
-              <p
-                className="text-xs sm:text-sm text-black leading-tight
-                           group-hover:text-[#7375FC] transition-colors duration-300"
-              >
-                by human<span className="font-bold">track</span>
-              </p>
-            </div>
+            <LogoWithText logoSize="md" animated={true} />
           </motion.div>
 
           {/* Main Title - Responsive */}
@@ -176,7 +138,7 @@ export default function InstrumentsPageClient({
           <motion.p
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
             className="text-sm sm:text-base lg:text-lg text-[#64748B] max-w-2xl mx-auto mb-6 sm:mb-8 lg:mb-10 px-4"
           >
             São mais de <span className="font-semibold">50 ferramentas</span>{" "}
@@ -187,7 +149,7 @@ export default function InstrumentsPageClient({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
             className="px-4"
           >
             <SearchBar
@@ -203,7 +165,7 @@ export default function InstrumentsPageClient({
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6, duration: 0.5 }}
+        transition={{ delay: 0.8, duration: 0.5 }}
       >
         <FilterTabs
           categories={uniqueCategories}
@@ -218,7 +180,7 @@ export default function InstrumentsPageClient({
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.8, duration: 0.5 }}
+        transition={{ delay: 1.0, duration: 0.5 }}
       >
         {paginatedInstruments.length > 0 ? (
           <InstrumentsGrid instruments={displayInstruments} />
@@ -260,7 +222,7 @@ export default function InstrumentsPageClient({
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 sm:mb-12"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.0, duration: 0.5 }}
+        transition={{ delay: 1.2, duration: 0.5 }}
       >
         <Pagination
           currentPage={currentPage}
@@ -273,7 +235,7 @@ export default function InstrumentsPageClient({
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.5 }}
+        transition={{ delay: 1.4, duration: 0.5 }}
         className="bg-[#2C2C3F] border-t border-[#CBCBCB]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">

@@ -17,7 +17,7 @@ export function Logo({ className = "h-[50px]" }: { className?: string }) {
 
 export function IconOnly({ className = "h-7" }: { className?: string }) {
   return (
-    <Link href="/app">
+    <div>
       <NextImage
         src="/icon.svg"
         className={className}
@@ -25,6 +25,6 @@ export function IconOnly({ className = "h-7" }: { className?: string }) {
         width={28}
         height={28}
       />
-    </Link>
+    </div>
   );
 }
