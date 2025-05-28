@@ -10,7 +10,6 @@ async function getInstruments(): Promise<{
   initialInstruments: Instrument[];
   error?: string | null;
 }> {
-  console.log(process.env.NEXT_PUBLIC_APP_URL);
   const baseUrl = "https://instrumentos-psicologicos.vercel.app";
   const internalApiUrl = `${baseUrl}/api/instruments`;
 
