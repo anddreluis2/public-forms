@@ -59,7 +59,7 @@ export default function InstrumentCard({ instrument }: InstrumentCardProps) {
           Criado em: {formattedCreationDate}
         </div>
         <Link
-          href={instrument.href}
+          href={`/instrument/${instrument.id}`}
           className="group inline-flex items-center text-sm font-semibold text-[#7375FC] hover:text-[#5A5CDD]"
         >
           Ver instrumento
