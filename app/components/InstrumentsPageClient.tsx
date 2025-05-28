@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Instrument } from "../types";
 import InstrumentsGrid from "./InstrumentsGrid";
@@ -21,8 +21,13 @@ export default function InstrumentsPageClient({
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todas");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Derive unique categories for FilterTabs from initialInstruments prop
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const allCategories = initialInstruments.flatMap((instrument) =>
     instrument.categories.map((cat) => cat.name)
   );
@@ -62,17 +67,69 @@ export default function InstrumentsPageClient({
     setCurrentPage(page);
   };
 
+  // Show loading state during hydration
+  if (!isMounted) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC]">
+        <div className="relative overflow-hidden bg-gradient-to-b from-[#EDF1FF] to-[#F8FAFC]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 text-center">
+            {/* Logo and Brand - Static */}
+            <div className="mb-8 sm:mb-10 lg:mb-12 flex justify-center items-center space-x-3 sm:space-x-4">
+              <IconOnly className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24" />
+              <div className="text-left">
+                <p className="text-xs sm:text-sm lg:text-base text-black leading-tight">
+                  Biblioteca de
+                </p>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#2C2C3F] leading-tight -mt-1">
+                  instrumentos
+                </h1>
+                <p className="text-xs sm:text-sm text-black leading-tight">
+                  by human<span className="font-bold">track</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Static content without animations */}
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#2C2C3F] mb-4 sm:mb-6 tracking-tight max-w-3xl mx-auto px-2">
+              Explore nossa biblioteca e encontre mais de{" "}
+              <span className="text-[#675ef6] font-bold">50 ferramentas</span>{" "}
+              clínicas e terapêuticas
+            </h1>
+
+            <p className="text-sm sm:text-base lg:text-lg text-[#64748B] max-w-2xl mx-auto mb-6 sm:mb-8 lg:mb-10 px-4">
+              São mais de <span className="font-semibold">50 ferramentas</span>{" "}
+              clínicas. Navegue por categoria ou busque por nome.
+            </p>
+
+            {/* Loading placeholder for search */}
+            <div className="px-4">
+              <div className="max-w-md mx-auto h-12 bg-gray-200 rounded-lg animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Loading placeholder for content */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+          <div className="flex justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#7375fc]"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       <div className="relative overflow-hidden bg-gradient-to-b from-[#EDF1FF] to-[#F8FAFC]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:py-4 lg:py-8 text-center">
-          <div className="mb-12 flex justify-center items-center space-x-3 sm:space-x-4">
-            <IconOnly className="h-24 w-24 sm:h-24 sm:w-24" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 text-center">
+          {/* Logo and Brand - Responsive */}
+          <div className="mb-8 sm:mb-10 lg:mb-12 flex justify-center items-center space-x-3 sm:space-x-4">
+            <IconOnly className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24" />
             <div className="text-left">
-              <p className="text-sm sm:text-base text-black leading-tight">
+              <p className="text-xs sm:text-sm lg:text-base text-black leading-tight">
                 Biblioteca de
               </p>
-              <h1 className="text-2xl sm:text-3xl font-bold text-[#2C2C3F] leading-tight -mt-1">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#2C2C3F] leading-tight -mt-1">
                 instrumentos
               </h1>
               <p className="text-xs sm:text-sm text-black leading-tight">
@@ -81,30 +138,35 @@ export default function InstrumentsPageClient({
             </div>
           </div>
 
+          {/* Main Title - Responsive */}
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold text-[#2C2C3F] mb-6 tracking-tight max-w-3xl mx-auto"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#2C2C3F] mb-4 sm:mb-6 tracking-tight max-w-3xl mx-auto px-2"
           >
             Explore nossa biblioteca e encontre mais de{" "}
             <span className="text-[#675ef6] font-bold">50 ferramentas</span>{" "}
             clínicas e terapêuticas
           </motion.h1>
+
+          {/* Subtitle - Responsive */}
           <motion.p
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-lg text-[#64748B] max-w-2xl mx-auto mb-10"
+            className="text-sm sm:text-base lg:text-lg text-[#64748B] max-w-2xl mx-auto mb-6 sm:mb-8 lg:mb-10 px-4"
           >
-            São mais de <span>50 ferramentas</span> clínicas. Navegue por
-            categoria ou busque por nome.
+            São mais de <span className="font-semibold">50 ferramentas</span>{" "}
+            clínicas. Navegue por categoria ou busque por nome.
           </motion.p>
 
+          {/* Search Bar - Responsive */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
+            className="px-4"
           >
             <SearchBar
               searchTerm={searchTerm}
@@ -114,6 +176,7 @@ export default function InstrumentsPageClient({
         </div>
       </div>
 
+      {/* Filter Tabs - Responsive Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <FilterTabs
           categories={uniqueCategories}
@@ -122,42 +185,48 @@ export default function InstrumentsPageClient({
         />
       </div>
 
+      {/* Instruments Grid - Responsive Container and Spacing */}
       <div
         id="instruments"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16"
       >
         {paginatedInstruments.length > 0 ? (
           <InstrumentsGrid instruments={displayInstruments} />
         ) : filteredInstruments.length === 0 &&
           (searchTerm !== "" || selectedCategory !== "Todas") ? (
-          <div className="text-center py-12">
-            <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+          <div className="text-center py-8 sm:py-12 px-4">
+            <h3 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-2">
               Nenhum instrumento encontrado
             </h3>
-            <p className="text-gray-500">Tente ajustar sua busca ou filtros.</p>
+            <p className="text-sm sm:text-base text-gray-500">
+              Tente ajustar sua busca ou filtros.
+            </p>
           </div>
         ) : initialInstruments.length === 0 ? (
           // This case now means no instruments were loaded initially from the prop
-          <div className="text-center py-12">
-            <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+          <div className="text-center py-8 sm:py-12 px-4">
+            <h3 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-2">
               Nenhum instrumento disponível no momento.
             </h3>
-            <p className="text-gray-500">Verifique mais tarde.</p>
+            <p className="text-sm sm:text-base text-gray-500">
+              Verifique mais tarde.
+            </p>
           </div>
         ) : (
           // Fallback for paginatedInstruments.length === 0 but initialInstruments.length > 0 (e.g. page beyond total pages after filtering)
-          <div className="text-center py-12">
-            <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+          <div className="text-center py-8 sm:py-12 px-4">
+            <h3 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-2">
               Nenhum instrumento para exibir nesta página.
             </h3>
-            <p className="text-gray-500">
+            <p className="text-sm sm:text-base text-gray-500">
               Tente ir para outra página ou ajustar os filtros.
             </p>
           </div>
         )}
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Pagination - Responsive Container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 sm:mb-12">
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
@@ -165,18 +234,19 @@ export default function InstrumentsPageClient({
         />
       </div>
 
+      {/* Footer - Responsive */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.5 }}
         className="bg-[#2C2C3F] border-t border-[#CBCBCB]"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
-            <p className="text-sm text-white mb-2 sm:mb-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left gap-2 sm:gap-0">
+            <p className="text-xs sm:text-sm text-white">
               © 2025 Humantrack. Todos os direitos reservados
             </p>
-            <p className="text-sm text-white">
+            <p className="text-xs sm:text-sm text-white">
               💜 Feito com amor por HumanTrack
             </p>
           </div>
