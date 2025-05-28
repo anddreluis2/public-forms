@@ -6,5 +6,9 @@ export async function getInstruments(): Promise<Instrument[]> {
     cache: "no-store",
   });
 
+  if (!response.ok) {
+    throw new Error(`Failed to fetch instruments: ${response.status}`);
+  }
+
   return response.json();
 }

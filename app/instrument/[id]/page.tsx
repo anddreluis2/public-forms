@@ -11,7 +11,6 @@ export default async function InstrumentDetailsPage({ params }: PageProps) {
 
   const instruments = await getInstruments();
 
-  console.log("instruments", instruments);
   const instrument = instruments.find((inst) => inst.id === id);
 
   if (!instrument) {
