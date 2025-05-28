@@ -7,28 +7,7 @@ import InstrumentsLoading from "./components/InstrumentsLoading"; // For Suspens
 import { getInstruments } from "./api/instruments/route";
 
 export default async function HomePage() {
-  const { initialInstruments, error } = await getInstruments();
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-red-50 p-4">
-        <div className="bg-white p-8 rounded-lg shadow-xl max-w-md text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">
-            Oops! Something went wrong.
-          </h1>
-          <p className="text-gray-700 mb-2">
-            We encountered an error while trying to load the instruments:
-          </p>
-          <p className="text-sm text-red-500 bg-red-100 p-3 rounded-md break-all">
-            {error}
-          </p>
-          <p className="text-gray-600 mt-4 text-sm">
-            Please try again later. If the problem persists, contact support.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  const initialInstruments = await getInstruments();
 
   if (!initialInstruments || initialInstruments.length === 0) {
     return (

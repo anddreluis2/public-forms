@@ -1,29 +1,15 @@
 import { Instrument } from "@/app/types";
 
-export async function getInstruments(): Promise<{
-  initialInstruments: Instrument[];
-  error?: string | null;
-}> {
+export async function getInstruments(): Promise<Instrument[]> {
   const baseUrl = "https://instrumentos-psicologicos.vercel.app";
-  const internalApiUrl = `${baseUrl}/api/instruments`;
 
-  const response = await fetch(internalApiUrl, {
-    cache: "no-store",
+  const response = await fetch(`${baseUrl}/api/instruments`, {
+    next: { revalidate: 3600 }, // Cache for 1 hour
   });
 
   if (!response.ok) {
-    const errorText = await response
-      .text()
-      .catch(() => "Could not retrieve error text.");
-    const errorMessage = `API Error (${response.status} ${response.statusText}): ${errorText}`;
-    console.error(errorMessage);
-    return {
-      initialInstruments: [],
-      error: errorMessage,
-    };
+    throw new Error(`Failed to fetch instruments: ${response.status}`);
   }
 
-  const data: Instrument[] = await response.json();
-
-  return { initialInstruments: data, error: null };
+  return response.json();
 }
