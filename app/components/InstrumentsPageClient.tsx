@@ -122,21 +122,37 @@ export default function InstrumentsPageClient({
     <div className="min-h-screen bg-[#F8FAFC]">
       <div className="relative overflow-hidden bg-gradient-to-b from-[#EDF1FF] to-[#F8FAFC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12 text-center">
-          {/* Logo and Brand - Responsive */}
-          <div className="mb-8 sm:mb-10 lg:mb-12 flex justify-center items-center space-x-3 sm:space-x-4">
-            <IconOnly className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24" />
+          {/* Logo and Brand - Responsive with Hover */}
+          <motion.div
+            className="mb-8 sm:mb-10 lg:mb-12 flex justify-center items-center space-x-3 sm:space-x-4
+                       cursor-pointer group transition-all duration-300 ease-in-out"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <div className="group-hover:rotate-12 transition-transform duration-300">
+              <IconOnly className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24" />
+            </div>
             <div className="text-left">
-              <p className="text-xs sm:text-sm lg:text-base text-black leading-tight">
+              <p
+                className="text-xs sm:text-sm lg:text-base text-black leading-tight
+                           group-hover:text-[#7375FC] transition-colors duration-300"
+              >
                 Biblioteca de
               </p>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#2C2C3F] leading-tight -mt-1">
+              <h1
+                className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#2C2C3F] leading-tight -mt-1
+                           group-hover:text-[#7375FC] transition-colors duration-300"
+              >
                 instrumentos
               </h1>
-              <p className="text-xs sm:text-sm text-black leading-tight">
+              <p
+                className="text-xs sm:text-sm text-black leading-tight
+                           group-hover:text-[#7375FC] transition-colors duration-300"
+              >
                 by human<span className="font-bold">track</span>
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Main Title - Responsive */}
           <motion.h1
@@ -146,7 +162,13 @@ export default function InstrumentsPageClient({
             className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#2C2C3F] mb-4 sm:mb-6 tracking-tight max-w-3xl mx-auto px-2"
           >
             Explore nossa biblioteca e encontre mais de{" "}
-            <span className="text-[#675ef6] font-bold">50 ferramentas</span>{" "}
+            <motion.span
+              className="text-[#675ef6] font-bold cursor-default"
+              whileHover={{ scale: 1.1, color: "#7375FC" }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              50 ferramentas
+            </motion.span>{" "}
             clínicas e terapêuticas
           </motion.h1>
 
@@ -177,18 +199,26 @@ export default function InstrumentsPageClient({
       </div>
 
       {/* Filter Tabs - Responsive Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.div
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6, duration: 0.5 }}
+      >
         <FilterTabs
           categories={uniqueCategories}
           selectedCategory={selectedCategory}
           onSelectCategory={handleFilterChange}
         />
-      </div>
+      </motion.div>
 
       {/* Instruments Grid - Responsive Container and Spacing */}
-      <div
+      <motion.div
         id="instruments"
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8, duration: 0.5 }}
       >
         {paginatedInstruments.length > 0 ? (
           <InstrumentsGrid instruments={displayInstruments} />
@@ -223,30 +253,35 @@ export default function InstrumentsPageClient({
             </p>
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* Pagination - Responsive Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 sm:mb-12">
+      <motion.div
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 sm:mb-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.0, duration: 0.5 }}
+      >
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
-      </div>
+      </motion.div>
 
       {/* Footer - Responsive */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
+        transition={{ delay: 1.2, duration: 0.5 }}
         className="bg-[#2C2C3F] border-t border-[#CBCBCB]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <div className="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left gap-2 sm:gap-0">
-            <p className="text-xs sm:text-sm text-white">
+            <p className="text-xs sm:text-sm text-white cursor-default hover:text-gray-300 transition-colors duration-200">
               © 2025 Humantrack. Todos os direitos reservados
             </p>
-            <p className="text-xs sm:text-sm text-white">
+            <p className="text-xs sm:text-sm text-white cursor-default hover:text-gray-300 transition-colors duration-200">
               💜 Feito com amor por HumanTrack
             </p>
           </div>
