@@ -1,10 +1,10 @@
 import { Instrument } from "@/app/types";
 
 export async function getInstruments(): Promise<Instrument[]> {
-  const baseUrl = "https://instrumentos-psicologicos.vercel.app";
+  const baseUrl = "https://ht-prod-backend.fly.dev";
 
-  const response = await fetch(`${baseUrl}/api/instruments`, {
-    next: { revalidate: 3600 }, // Cache for 1 hour
+  const response = await fetch(`${baseUrl}/forms/public/library/`, {
+    cache: "no-store",
   });
 
   if (!response.ok) {

@@ -28,8 +28,8 @@ export default function InstrumentsPageClient({
     setIsMounted(true);
   }, []);
 
-  const allCategories = initialInstruments.flatMap((instrument) =>
-    instrument.categories.map((cat) => cat.name)
+  const allCategories = initialInstruments.flatMap(
+    (instrument) => instrument.categories?.map((cat) => cat.name) || []
   );
   const uniqueCategories = [...new Set(allCategories)];
 

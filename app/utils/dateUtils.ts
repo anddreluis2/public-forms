@@ -19,7 +19,16 @@ export function formatDateToBrazilian(
 
   const formatOptions = options || defaultOptions;
 
-  return new Intl.DateTimeFormat("pt-BR", formatOptions).format(new Date(date));
+  if (!date) {
+    return "Data não disponível";
+  }
+
+  const dateObj = new Date(date);
+  if (isNaN(dateObj.getTime())) {
+    return "Data inválida";
+  }
+
+  return new Intl.DateTimeFormat("pt-BR", formatOptions).format(dateObj);
 }
 
 /**

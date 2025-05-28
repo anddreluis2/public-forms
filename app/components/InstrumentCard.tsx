@@ -34,7 +34,7 @@ export default function InstrumentCard({ instrument }: InstrumentCardProps) {
       >
         <div>
           <div className="flex flex-wrap gap-2 mb-4">
-            {instrument.categories.map((category, index) => (
+            {instrument.categories?.map((category, index) => (
               <span
                 key={index}
                 className="px-3 bg-[#7375FC] text-white py-1 text-xs font-bold rounded-full
