@@ -4,7 +4,7 @@ import { Suspense } from "react";
 
 import InstrumentsPageClient from "./components/InstrumentsPageClient";
 import InstrumentsLoading from "./components/InstrumentsLoading"; // For Suspense fallback
-import { getInstruments } from "./api/instruments/route";
+import { getInstruments } from "./lib/instruments";
 
 export default async function HomePage() {
   const initialInstruments = await getInstruments();
