@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Instrument } from "../../types";
 
 interface InstrumentDetailsProps {
@@ -38,11 +39,14 @@ export default function InstrumentDetails({
 
         {/* Header Container */}
         <div className="max-w-[1240px] mx-auto px-4">
-          {/* Breadcrumb */}
+          {/* Breadcrumb - Now Functional */}
           <div className="flex items-center gap-2 mb-4 md:mb-6 overflow-x-auto">
-            <span className="text-[#7375fc] font-medium text-xs md:text-sm whitespace-nowrap">
+            <Link
+              href="/"
+              className="text-[#7375fc] font-medium text-xs md:text-sm whitespace-nowrap hover:text-[#5A5CDD] transition-colors cursor-pointer"
+            >
               Biblioteca de instrumentos
-            </span>
+            </Link>
             <svg
               className="w-4 h-4 md:w-6 md:h-6 text-gray-400 flex-shrink-0"
               fill="none"
