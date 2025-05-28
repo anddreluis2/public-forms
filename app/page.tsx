@@ -2,40 +2,10 @@
 
 import { Suspense } from "react";
 
-import { Instrument } from "./types";
 import InstrumentsPageClient from "./components/InstrumentsPageClient";
 import InstrumentsLoading from "./components/InstrumentsLoading"; // For Suspense fallback
+import { getInstruments } from "./api/instruments/route";
 
-async function getInstruments(): Promise<{
-  initialInstruments: Instrument[];
-  error?: string | null;
-}> {
-  const baseUrl = "https://instrumentos-psicologicos.vercel.app";
-  const internalApiUrl = `${baseUrl}/api/instruments`;
-
-  const response = await fetch(internalApiUrl, {
-    next: { revalidate: 3600 },
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    const errorText = await response
-      .text()
-      .catch(() => "Could not retrieve error text.");
-    const errorMessage = `API Error (${response.status} ${response.statusText}): ${errorText}`;
-    console.error(errorMessage);
-    return {
-      initialInstruments: [],
-      error: errorMessage,
-    };
-  }
-
-  const data: Instrument[] = await response.json();
-
-  return { initialInstruments: data, error: null };
-}
-
-// Page component is now an async Server Component
 export default async function HomePage() {
   const { initialInstruments, error } = await getInstruments();
 
