@@ -3,7 +3,7 @@ import { Instrument } from "../../types";
 import InstrumentDetails from "@/app/instrument/[id]/InstrumentDetails";
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 async function getInstruments(): Promise<Instrument[]> {
@@ -21,7 +21,7 @@ async function getInstruments(): Promise<Instrument[]> {
 }
 
 export default async function InstrumentDetailsPage({ params }: PageProps) {
-  const { id } = params;
+  const { id } = await params;
 
   console.log("🔍 Server-side rendering for ID:", id);
 
