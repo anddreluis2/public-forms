@@ -1,8 +1,8 @@
 import { Instrument } from "@/app/types";
 
+const baseUrl = process.env.BASE_URL;
+
 export async function getInstruments(): Promise<Instrument[]> {
-  const baseUrl = process.env.BASE_URL;
-  console.log(process.env.BASE_URL);
   const response = await fetch(`${baseUrl}/forms/public/library/`, {
     cache: "no-store",
   });
