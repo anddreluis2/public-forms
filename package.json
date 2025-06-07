@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@flydotio/dockerfile": "^0.7.10",
     "framer-motion": "^12.9.2",
     "motion": "^12.9.2",
     "next": "15.3.1",
